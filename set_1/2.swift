@@ -1,5 +1,3 @@
-import Foundation
-
 extension Character {
   func unicodeScalar() -> UnicodeScalar {
     let characterString = String(self)
