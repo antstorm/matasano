@@ -1,26 +1,62 @@
 import Foundation
 
-extension Character {
-  func unicodeScalar() -> UnicodeScalar {
-    let characterString = String(self)
-    let scalars = characterString.unicodeScalars
+class ByteArray: Printable {
+  var bytes:[UInt8] = []
 
-    return scalars[scalars.startIndex]
-  }
-}
-
-extension String {
-  subscript (i: Int) -> Character {
-    return self[advance(self.startIndex, i)]
+  var description: String {
+    return bytes.description
   }
 
-  subscript (i: Int) -> String {
-    return String(self[i] as Character)
-  }
-}
+  init() {}
 
-func hexToInt(hex: String) -> UInt8 {
-  return UInt8(strtoul(hex, nil, 16))
+  init(hex: String) {
+    for i in 0..<count(hex) / 2 {
+      let firstDigit = String(hex[advance(hex.startIndex, i * 2)])
+      let secondDigit = String(hex[advance(hex.startIndex, i * 2 + 1)])
+
+      bytes.append(hexToInt(firstDigit + secondDigit))
+    }
+  }
+
+  func xor(input: UInt8) -> ByteArray {
+    var result = ByteArray()
+
+    for byte in bytes {
+      result.append(byte ^ input)
+    }
+
+    return result
+  }
+
+  func append(byte: UInt8) {
+    bytes.append(byte)
+  }
+
+  func hexToInt(hex: String) -> UInt8 {
+    return UInt8(strtoul(hex, nil, 16))
+  }
+
+  // Output
+
+  func toHex() -> String {
+    var result = ""
+
+    for byte in bytes {
+      result += String(byte, radix: 16)
+    }
+
+    return result
+  }
+
+  func toString() -> String {
+    var result = ""
+
+    for byte in bytes {
+      result += String(UnicodeScalar(byte))
+    }
+
+    return result
+  }
 }
 
 func englishProbability(string: String) -> Int {
@@ -58,72 +94,17 @@ func englishProbability(string: String) -> Int {
   return totalScore
 }
 
-func intToBase64(number: Int) -> Character {
-  if number < 26 {
-    return Character(UnicodeScalar(number + 65))
-  } else if number < 52 {
-    return Character(UnicodeScalar(number + 71))
-  } else if number < 62 {
-    return Character(UnicodeScalar(number - 4))
-  } else if number == 62 {
-    return "+"
-  } else {
-    return "/"
-  }
-}
-
-func hexToBase64(hex: String) -> String {
-  var result: String = ""
-
-  for i in 0..<(count(hex) / 3) {
-    let leftPart = charToInt(Array(hex)[i * 3])
-    let middlePart = charToInt(Array(hex)[i * 3 + 1])
-    let rightPart = charToInt(Array(hex)[i * 3 + 2])
-
-    // 4 bits from the left part and first 2 bits from the middle part
-    let firstCharacter = leftPart << 2 + middlePart >> 2
-    // last 2 bits from the middle part and 4 bits from the right part
-    let lastCharacter = (middlePart & 0x3) << 4 + rightPart
-
-    result += String(intToBase64(firstCharacter))
-    result += String(intToBase64(lastCharacter))
-  }
-
-  return result
-}
-
 func findKey(hex: String) -> Int {
+  let bytes = ByteArray(hex: hex)
+
   var scores = [Int: Int]()
 
-  for i in 0..<128 {
-    let xorResult = xor(hex, UInt8(i))
+  for i in 0..<256 {
+    let xorResult = bytes.xor(UInt8(i)).toString()
     scores[i] = englishProbability(xorResult)
   }
 
   return sorted(scores) { $0.1 > $1.1 }[0].0
-}
-
-func xor(a: String, b: UInt8) -> String {
-  var aBytes:[UInt8] = []
-
-  for i in 0..<count(a) / 2 {
-    aBytes.append(hexToInt(a[i * 2] + a[i * 2 + 1]))
-  }
-
-  var result: String = ""
-
-  for i in 0..<count(aBytes) {
-    result += String(UnicodeScalar(aBytes[i] ^ b))
-  }
-
-  return result
-}
-
-func charToInt(character: Character) -> Int {
-  var number = character.unicodeScalar().value - 48
-  if number > 9 { number -= 39 }
-
-  return Int(number)
 }
 
 let input = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
