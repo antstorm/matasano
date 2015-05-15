@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 pub struct EnglishProbability;
 
 impl EnglishProbability {

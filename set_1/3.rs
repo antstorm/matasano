@@ -1,5 +1,4 @@
 use std::char;
-use std::collections::BTreeMap;
 
 mod hex;
 mod byte_array;
