@@ -1,4 +1,4 @@
-use hex;
+mod hex;
 
 pub struct ByteArray {
   bytes: Vec<u8>
@@ -11,8 +11,8 @@ impl ByteArray {
     let half_length = hex_string.len() / 2;
 
     for _ in 0..half_length {
-      let first_bits = Hex::to_int(iterator.next().unwrap());
-      let last_bits = Hex::to_int(iterator.next().unwrap());
+      let first_bits = hex::to_int(iterator.next().unwrap());
+      let last_bits = hex::to_int(iterator.next().unwrap());
 
       bytes.push((first_bits << 4) + last_bits);
     }

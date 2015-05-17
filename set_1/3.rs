@@ -1,6 +1,5 @@
 use std::char;
 
-mod hex;
 mod byte_array;
 
 fn find_key(input: &str) -> u8 {

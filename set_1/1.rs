@@ -1,12 +1,4 @@
-fn hex_to_int(hex: char) -> u8 {
-  let mut unicode_scalar = hex as u8;
-
-  // 48 => "0", 97 => "a"
-  unicode_scalar -= 48;
-  if unicode_scalar > 9 { unicode_scalar -= 39; }
-
-  unicode_scalar
-}
+mod hex;
 
 fn int_to_base64(num: u8) -> char {
   let result: u8;
@@ -33,9 +25,9 @@ fn hex_to_base64(hex: &str) -> String {
   // 3 4-bit digits at a time
   // 4 bits * 3 = 12 bits = 2 base64 digits
   for _ in 0..(hex.len() / 3) {
-    let left_part = hex_to_int(digit_iterator.next().unwrap());
-    let middle_part = hex_to_int(digit_iterator.next().unwrap());
-    let right_part = hex_to_int(digit_iterator.next().unwrap());
+    let left_part = hex::to_int(digit_iterator.next().unwrap());
+    let middle_part = hex::to_int(digit_iterator.next().unwrap());
+    let right_part = hex::to_int(digit_iterator.next().unwrap());
 
     // 4 bits from the left part and first 2 bits from the middle part
     let first_digit = (left_part << 2) + (middle_part >> 2);
@@ -48,8 +40,6 @@ fn hex_to_base64(hex: &str) -> String {
 
   result
 }
-
-
 
 fn main() {
   let input = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
