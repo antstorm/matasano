@@ -1,11 +1,13 @@
-mod hex;
+use std::char;
+
+use hex;
 
 pub struct ByteArray {
   bytes: Vec<u8>
 }
 
 impl ByteArray {
-  fn new(hex_string: &str) -> ByteArray {
+  pub fn new(hex_string: &str) -> ByteArray {
     let mut bytes: Vec<u8> = vec!();
     let mut iterator = hex_string.chars();
     let half_length = hex_string.len() / 2;
@@ -20,7 +22,7 @@ impl ByteArray {
     ByteArray { bytes: bytes }
   }
 
-  fn xor(&self, byte: u8) -> ByteArray {
+  pub fn xor(&self, byte: u8) -> ByteArray {
     let mut result = ByteArray { bytes: vec!() };
 
     for i in self.bytes.iter() {
@@ -32,7 +34,7 @@ impl ByteArray {
     result
   }
 
-  fn to_string(&self) -> String {
+  pub fn to_string(&self) -> String {
     let mut result = String::new();
 
     for i in self.bytes.iter() {

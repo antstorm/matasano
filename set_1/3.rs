@@ -1,15 +1,15 @@
-use std::char;
-
+mod hex;
 mod byte_array;
+mod english_probability;
 
 fn find_key(input: &str) -> u8 {
-  let input_bytes = ByteArray::new(input);
+  let input_bytes = byte_array::ByteArray::new(input);
   let mut scores = vec!();
 
   for i in 0..256 {
     let result = input_bytes.xor(i as u8).to_string();
 
-    scores.push(EnglishProbability::score_for(&result));
+    scores.push(english_probability::EnglishProbability::score_for(&result));
   }
 
   let mut max_value = 0;
@@ -31,6 +31,4 @@ fn main() {
 
   println!("result = {}", output);
   assert_eq!(output, 88);
-
-  byte_array::print_hello();
 }

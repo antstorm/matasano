@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 pub struct EnglishProbability;
 
 impl EnglishProbability {
-  fn score_for(input: &str) -> i16 {
+  pub fn score_for(input: &str) -> i16 {
     use std::ascii::AsciiExt;
 
     let perfect_probability = "etaoinshrdlu";
