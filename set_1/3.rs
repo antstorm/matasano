@@ -9,6 +9,8 @@ fn find_key(input: &str) -> u8 {
   for i in 0..256 {
     let result = input_bytes.xor(i as u8).to_string();
 
+    print!("{}: {}: ", i, result);
+
     scores.push(english_probability::EnglishProbability::score_for(&result));
   }
 
