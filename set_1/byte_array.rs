@@ -22,21 +22,47 @@ impl ByteArray {
     ByteArray { bytes: bytes }
   }
 
+  pub fn from_bytes(input: &str) -> ByteArray {
+    let mut bytes: Vec<u8> = vec!();
+
+    for byte in input.chars() {
+      bytes.push(byte as u8);
+    }
+
+    ByteArray { bytes: bytes }
+  }
+
   pub fn xor(&self, bytes: &[u8]) -> ByteArray {
     let mut result = ByteArray { bytes: vec!() };
     let mut current_byte_index = 0;
 
     for i in self.bytes.iter() {
-      let byte = bytes[current_byte_index];
+      let mut byte = bytes[current_byte_index];
 
       current_byte_index += 1;
-      if current_byte_index >= bytes.len() - 1 {
+      if current_byte_index == bytes.len() {
         current_byte_index = 0;
       }
 
       let xored = i ^ byte;
 
       result.bytes.push(xored)
+    }
+
+    result
+  }
+
+  pub fn to_byte_string(&self) -> String {
+    let mut result = String::new();
+
+    for i in self.bytes.iter() {
+      let hex = format!("{:x}", i);
+
+      // padding for half-byte characters
+      if hex.len() == 1 { result = result + "0"; }
+
+      // appending hex representation of the current byte
+      result = result + &format!("{:x}", i);
     }
 
     result
