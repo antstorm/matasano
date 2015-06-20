@@ -58,11 +58,8 @@ impl ByteArray {
     for i in self.bytes.iter() {
       let hex = format!("{:x}", i);
 
-      // padding for half-byte characters
-      if hex.len() == 1 { result = result + "0"; }
-
-      // appending hex representation of the current byte
-      result = result + &format!("{:x}", i);
+      // appending hex representation of the current byte (padded to 2 chars)
+      result = result + &format!("{:02x}", i);
     }
 
     result
