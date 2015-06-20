@@ -18,7 +18,7 @@ fn find_key_and_score(input: &str) -> (u8, u8) {
   let mut scores = vec!();
 
   for i in 0..256 {
-    let result = input_bytes.xor(i as u8).to_string();
+    let result = input_bytes.xor(&[i as u8]).to_string();
 
     scores.push(english_probability::EnglishProbability::score_for(&result));
   }
@@ -57,7 +57,7 @@ fn main() {
     if score > max_score {
       let input_bytes = byte_array::ByteArray::new(&input_line);
       max_score = score;
-      result = input_bytes.xor(key as u8).to_string();
+      result = input_bytes.xor(&[key as u8]).to_string();
     }
   }
 

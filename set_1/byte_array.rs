@@ -22,10 +22,18 @@ impl ByteArray {
     ByteArray { bytes: bytes }
   }
 
-  pub fn xor(&self, byte: u8) -> ByteArray {
+  pub fn xor(&self, bytes: &[u8]) -> ByteArray {
     let mut result = ByteArray { bytes: vec!() };
+    let mut current_byte_index = 0;
 
     for i in self.bytes.iter() {
+      let byte = bytes[current_byte_index];
+
+      current_byte_index += 1;
+      if current_byte_index >= bytes.len() - 1 {
+        current_byte_index = 0;
+      }
+
       let xored = i ^ byte;
 
       result.bytes.push(xored)
